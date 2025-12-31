@@ -469,50 +469,9 @@ body {
 }
 
 /* =========================================
-    11. SECCIÓN VIDEO VERTICAL (CÓDIGO FINAL CORREGIDO)
+    REGLAS PARA QUE EL VIDEO FUNCIONE EN CELULAR
    ========================================= */
 
-.video-split-section {
-    padding: 60px 20px;
-    background: #ffffff;
-    clear: both; /* Evita que se encime con otras secciones */
-    display: flex;
-    justify-content: center;
-}
-
-.video-split-container {
-    max-width: 1100px;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 50px;
-    align-items: center;
-}
-
-.video-text-content {
-    text-align: left;
-}
-
-.video-text-content h2 {
-    color: var(--primary);
-    font-size: 2.2rem;
-    margin-bottom: 20px;
-}
-
-.video-features {
-    list-style: none;
-    padding: 0;
-}
-
-.video-features li {
-    font-weight: 600;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* MARCO DEL CELULAR */
 .phone-frame {
     width: 300px;
     background: #000;
@@ -522,18 +481,18 @@ body {
     border: 4px solid #333;
     position: relative;
     margin: 0 auto;
-    /* Evita que el marco bloquee el clic en el video */
+    /* 1. Hace que el marco sea 'invisible' al tacto para que no bloquee el video */
     pointer-events: none; 
 }
 
 .video-responsive-vertical {
     position: relative;
-    padding-bottom: 177.77%; /* Proporción 9:16 */
+    padding-bottom: 177.77%; /* Proporción 9:16 exacta para Shorts */
     height: 0;
     overflow: hidden;
     border-radius: 35px;
     background: #000;
-    /* Reactiva el clic solo para el video */
+    /* 2. Reactiva el tacto solo dentro de esta zona para poder dar Play */
     pointer-events: auto; 
 }
 
@@ -544,33 +503,13 @@ body {
     width: 100%;
     height: 100%;
     border: none;
+    /* 3. Asegura que el video sea la capa que recibe el toque */
     z-index: 10;
 }
 
-/* =========================================
-    12. RESPONSIVO FINAL (PARA CELULARES)
-   ========================================= */
+/* AJUSTE RESPONSIVO PARA PANTALLAS PEQUEÑAS */
 @media (max-width: 850px) {
-    .video-split-container {
-        grid-template-columns: 1fr;
-        gap: 30px;
-        text-align: center;
-    }
-    
-    .video-text-content {
-        order: 1;
-        text-align: center;
-    }
-    
-    .video-vertical-wrapper {
-        order: 2;
-    }
-
     .phone-frame {
-        width: 260px; /* Más cómodo para pantallas pequeñas */
-    }
-
-    .video-text-content h2 {
-        font-size: 1.8rem;
+        width: 260px; /* Tamaño optimizado para móviles */
     }
 }
