@@ -153,7 +153,7 @@ cart = [];
  * Envía consulta al número del EXPERTO (Botón flotante)
  */
 function contactExpert() {
-    const msg = "Hola experto de RIODONTECSERVICE, necesito asesoría técnica para mi consultorio.";
+    const msg = "Saludos RIODONTECSERVICE, necesito asesoría de un experimentado en servicio técnico de equipos dentales.";
     window.open(`https://wa.me/${NUMERO_EXPERTO}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -204,4 +204,5 @@ function sendCustomOrder() {
 
     // Opcional: Mostrar un mensaje de éxito rápido
     console.log("Formulario enviado y limpiado con éxito.");
+
 }
