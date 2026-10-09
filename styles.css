@@ -86,7 +86,6 @@ body {
 .cart-line { width: 100%; height: 3px; background: var(--secondary); border-radius: 2px; }
 
 /* Dropdowns del menú */
-/* Dropdowns del menú */
 .dropdown { 
     position: relative; 
     display: inline-block; 
@@ -119,7 +118,7 @@ body {
 /* Alineación justificada para que los párrafos se lean perfectamente */
 .dropdown-content .about-item p {
     text-align: justify;
-    font-size: 0.85rem; /* Opcional: ajusta ligeramente el tamaño si lo ves necesario */
+    font-size: 0.85rem;
     line-height: 1.4;
 }
 
@@ -312,16 +311,41 @@ body {
 }
 
 /* =========================================
-    8. RESPONSIVO
+    8. RESPONSIVO (MEJORADO PARA MÓVILES)
    ========================================= */
 @media (max-width: 768px) {
     .header-container { flex-direction: column; gap: 15px; text-align: center; }
+    
+    /* Asegura que los dropdowns se adapten perfectamente a pantallas angostas sin salirse */
+    .dropdown-content {
+        min-width: 90vw;
+        max-width: 95vw;
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        padding: 12px;
+    }
+
     .owner-container { flex-direction: column; text-align: center; padding: 20px; }
     .owner-img { flex: 0 0 250px; width: 100%; height: 300px; }
     .whatsapp-tooltip { display: none; }
     .work-grid-container { grid-template-columns: 1fr; }
     .cart-dropdown { width: 95%; padding: 20px; }
+    
+    /* Slider móvil optimizado */
+    .slide-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .slide-img {
+        width: 100%;
+        height: 200px;
+    }
+    .slide-text {
+        padding: 20px;
+    }
 }
+
 /* =========================================
     9. SECCIÓN MAPA (CENTRADO Y AJUSTADO)
    ========================================= */
@@ -335,25 +359,23 @@ body {
 .map-container {
     position: relative;
     width: 100%;
-    height: 450px; /* Altura fija para que no se vea tan estirado */
+    height: 450px;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     border: 3px solid var(--white);
 }
 
-/* Si usas un iframe de Google Maps */
 .map-container iframe {
     width: 100%;
     height: 100%;
     border: 0;
-    /* Esto ayuda a que el contenido se sienta "enfocado" */
     filter: grayscale(10%) contrast(110%);
 }
 
 @media (max-width: 768px) {
     .map-container {
-        height: 300px; /* Un poco más pequeño en móviles */
+        height: 300px;
     }
 }
 
@@ -365,7 +387,6 @@ body {
     background: linear-gradient(135deg, #f4f7f6 0%, #e2e8f0 100%);
 }
 
-/* ESTO CENTRA SOLO EL TÍTULO */
 .order-title-container {
     text-align: center;
     margin-bottom: 30px;
@@ -386,7 +407,7 @@ body {
     border-radius: 20px;
     box-shadow: 0 15px 35px rgba(0, 74, 140, 0.1);
     display: grid;
-    grid-template-columns: 1fr 1.2fr; /* El formulario es un poco más ancho */
+    grid-template-columns: 1fr 1.2fr;
     gap: 40px;
     align-items: center;
 }
@@ -400,7 +421,7 @@ body {
 
 .order-form {
     display: flex;
-    flex-direction: column;
+    flexDirection: column;
     gap: 15px;
 }
 
@@ -453,6 +474,7 @@ body {
         text-align: center;
     }
 }
+
 /* =========================================
     11. SECCIÓN REDES SOCIALES
    ========================================= */
@@ -482,18 +504,16 @@ body {
 }
 
 .social-icon img {
-    width: 45px;   /* Ajusta el tamaño a tu gusto */
+    width: 45px;
     height: 45px;
     object-fit: contain;
     display: block;
 }
 
-/* Efectos al pasar el mouse */
 .social-icon:hover {
     transform: translateY(-8px) scale(1.1);
 }
 
-/* Colores específicos en hover (opcional para dar vida) */
 .facebook:hover { filter: drop-shadow(0 5px 15px rgba(24, 119, 242, 0.4)); }
 .instagram:hover { filter: drop-shadow(0 5px 15px rgba(225, 48, 108, 0.4)); }
 .tiktok:hover { filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2)); }
@@ -510,7 +530,6 @@ body {
 /* =========================================
     REGLAS PARA QUE EL VIDEO FUNCIONE EN CELULAR
    ========================================= */
-
 .phone-frame {
     width: 300px;
     background: #000;
@@ -520,19 +539,17 @@ body {
     border: 4px solid #333;
     position: relative;
     margin: 0 auto;
-    /* 1. Hace que el marco sea 'invisible' al tacto para que no bloquee el video */
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 .video-responsive-vertical {
     position: relative;
-    padding-bottom: 177.77%; /* Proporción 9:16 exacta para Shorts */
+    padding-bottom: 177.77%;
     height: 0;
     overflow: hidden;
     border-radius: 35px;
     background: #000;
-    /* 2. Reactiva el tacto solo dentro de esta zona para poder dar Play */
-    pointer-events: auto; 
+    pointer-events: auto;
 }
 
 .video-responsive-vertical iframe {
@@ -541,14 +558,12 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    border: none;
-    /* 3. Asegura que el video sea la capa que recibe el toque */
+    border: 0;
     z-index: 10;
 }
 
-/* AJUSTE RESPONSIVO PARA PANTALLAS PEQUEÑAS */
 @media (max-width: 850px) {
     .phone-frame {
-        width: 260px; /* Tamaño optimizado para móviles */
+        width: 260px;
     }
 }
