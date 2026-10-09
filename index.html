@@ -653,6 +653,29 @@
         </button>
     </div>
 </div>
+
+<!-- MODAL DE LOGIN DE ADMINISTRADOR -->
+<div id="admin-login-overlay" class="cart-overlay" style="display: none;" onclick="closeAdminLogin()"></div>
+
+<div id="admin-login-modal" class="cart-dropdown" style="display: none; max-width: 380px;">
+    <div class="cart-header">
+        <h3>Bienvenido a Riodontec Service</h3>
+        <button onclick="closeAdminLogin()" class="close-cart">&times;</button>
+    </div>
+    
+    <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display: flex; flex-direction: column; gap: 15px;">
+        <div class="input-group" style="width: 100%;">
+            <input type="text" id="adminUser" placeholder="Usuario" required style="width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 8px; box-sizing: border-box;">
+        </div>
+        <div class="input-group" style="width: 100%;">
+            <input type="password" id="adminPass" placeholder="Contraseña" required style="width: 100%; padding: 12px; border: 2px solid #edf2f7; border-radius: 8px; box-sizing: border-box;">
+        </div>
+        <button type="submit" class="btn-confirm-order" style="background: var(--primary); margin-top: 5px;">
+            Ingresar al Panel
+        </button>
+    </form>
+</div>
+    
 </body>
 </html>
 
