@@ -206,10 +206,10 @@ function sendCustomOrder() {
     console.log("Formulario enviado y limpiado con éxito.");
 }
 
-// --- 7. LÓGICA DE LOGIN DE ADMINISTRADOR (CON SEGURIDAD HASH SHA-256) ---
+// --- 7. LÓGICA DE LOGIN DE ADMINISTRADOR ---
 
 function openAdminLogin() {
-    // Si ya está autenticado previamente en esta sesión, abrir directo el panel
+    // Si ya está autenticado, abrir directo el panel
     if (localStorage.getItem("riodontec_auth") === "true") {
         initAdminPanel();
         return;
@@ -232,36 +232,19 @@ function closeAdminLogin() {
     }
 }
 
-// Función auxiliar para encriptar en SHA-256 la contraseña ingresada
-async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function handleAdminLogin(event) {
+function handleAdminLogin(event) {
     event.preventDefault();
     const user = document.getElementById('adminUser').value.trim();
     const pass = document.getElementById('adminPass').value;
 
-    // Usuario permitido
-    const ADMIN_USER = "admin";
-    
-    // Hash SHA-256 correspondiente a la contraseña "riodontec2027"
-    // Generado previamente para que la contraseña real NUNCA viaje ni esté en texto plano en el JS público
-    const ADMIN_PASS_HASH = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; // (Ejemplo de hash para tu contraseña)
-
-    // Generar el hash de lo que escribió el usuario
-    const hashedInputPass = await sha256(pass);
-
-    if (user === ADMIN_USER && hashedInputPass === ADMIN_PASS_HASH) {
+    // Credenciales directas de administrador
+    if (user === "admin" && pass === "riodontec2027") {
         alert("¡Bienvenido al panel de administración!");
         localStorage.setItem("riodontec_auth", "true");
         closeAdminLogin();
         document.getElementById('adminLoginForm').reset();
         
-        // Abrir el panel CRUD
+        // Abrir el panel CRUD de productos
         initAdminPanel();
     } else {
         alert("Usuario o contraseña incorrectos.");
