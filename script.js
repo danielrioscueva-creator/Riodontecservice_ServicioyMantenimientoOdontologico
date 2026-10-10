@@ -59,23 +59,47 @@ function toggleCartDisplay() {
 /**
  * Añade productos y actualiza el contador
  */
-function addToCart(name, price) {
-    cart.push({ name: name, price: parseFloat(price) });
+function addToCart(name, price, button = null) {
+    const numericPrice = Number.parseFloat(price);
+
+    if (!name || !Number.isFinite(numericPrice)) {
+        console.error("No se pudo añadir el producto: nombre o precio inválido.", { name, price });
+        return;
+    }
+
+    cart.push({ name: name, price: numericPrice });
+
     const countElement = document.getElementById('cart-count');
-    if(countElement) countElement.innerText = cart.length;
-    
-    // Notificación visual en el botón
-    const btn = event.target;
-    const originalText = btn.innerText;
-    btn.innerText = "¡Añadido! ✓";
-    btn.style.backgroundColor = "#2ecc71"; 
-    
-    setTimeout(() => {
-        btn.innerText = originalText;
-        btn.style.backgroundColor = ""; 
-    }, 1200);
+    if (countElement) countElement.innerText = cart.length;
+
+    // La animación del botón es opcional para que el carrito funcione
+    // aunque la llamada no proporcione una referencia al botón.
+    if (button) {
+        const originalText = button.innerText;
+        button.innerText = "¡Añadido! ✓";
+        button.style.backgroundColor = "#2ecc71";
+
+        setTimeout(() => {
+            button.innerText = originalText;
+            button.style.backgroundColor = "";
+        }, 1200);
+    }
 
     updateCartUI();
+}
+
+/**
+ * Añade al carrito un producto del catálogo generado dinámicamente.
+ */
+function addToCartByIndex(index, button = null) {
+    const product = products[index];
+
+    if (!product) {
+        console.error("No se encontró el producto con índice:", index);
+        return;
+    }
+
+    addToCart(product.name, product.price, button);
 }
 
 /**
@@ -255,8 +279,8 @@ let defaultProducts = [
     { name: "Punta Ultrasonido G1", price: 15.00, img: "https://www.dentalcost.es/15859-thickbox_default/punta-ultrasonidos-g1-tipo-ems-1-unidad.jpg" },
     { name: "Manguera Borden 4H precio x metro", price: 12.00, img: "https://http2.mlstatic.com/D_NQ_NP_985961-MLA92692470577_092025-O.webp" },
     { name: "Sillones odontológicos", price: 2500.00, img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg" },
-    { name: "Jeringa Triple", price: 40.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWHv4Cv_xlyOROK6mfCmhzj9D6zhvILZlIs10eYOim4DXZMWBslfZRm50&s=10" },[cite: 12]
-    { name: "Presostato Square D", price: 55.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrbSyMSadSoZc_OKwNKv3ySjsXC9UlGFNyr5bIFrbSQ&s=10" },[cite: 12]
+    { name: "Jeringa Triple", price: 40.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWHv4Cv_xlyOROK6mfCmhzj9D6zhvILZlIs10eYOim4DXZMWBslfZRm50&s=10" },
+    { name: "Presostato Square D", price: 55.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrbSyMSadSoZc_OKwNKv3ySjsXC9UlGFNyr5bIFrbSQ&s=10" },
     { name: "Válvula de Pedal", price: 48.00, img: "https://unidadesdentalesperu.com/wp-content/uploads/2023/10/valvula-peda.jpg" },
     { name: "Kit O-rings", price: 20.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2wFNBKd_I5DDiirgYhuqn0SJhgLNNdPCFJFudRi3KKedKXmdrRbw1x3zz&s=10" },
     { name: "Acople Rápido 4H", price: 65.00, img: "https://mltracores.com/wp-content/uploads/2022/09/hembra-cavitron.jpg" },
@@ -265,7 +289,21 @@ let defaultProducts = [
     { name: "Aceite en Spray", price: 15.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlYQJ3ejRC5hLH2vKuzagILO4fE81KZcrmVTJkDBEk-HCwYIfDbxxhDnqO&s=10" }
 ];
 
-let products = JSON.parse(localStorage.getItem("riodontec_products")) || defaultProducts;
+let products = defaultProducts;
+try {
+    const storedProducts = JSON.parse(localStorage.getItem("riodontec_products"));
+    if (Array.isArray(storedProducts)) {
+        products = storedProducts
+            .filter(product => product && typeof product.name === "string" && Number.isFinite(Number(product.price)))
+            .map(product => ({
+                name: product.name,
+                price: Number(product.price),
+                img: typeof product.img === "string" ? product.img : ""
+            }));
+    }
+} catch (error) {
+    console.error("No se pudieron leer los productos guardados; se usarán los productos predeterminados.", error);
+}
 
 function saveProductsToStorage() {
     localStorage.setItem("riodontec_products", JSON.stringify(products));
@@ -418,7 +456,7 @@ function renderProducts() {
                 <h3>${product.name}</h3>
                 <p>Componente certificado con garantía.</p>
                 <span class="price">$${product.price.toFixed(2)}</span>
-                <button class="add-to-cart-btn" onclick="addToCartByIndex(${index})">Añadir</button>
+                <button class="add-to-cart-btn" onclick="addToCartByIndex(${index}, this)">Añadir</button>
             </div>
         `;
     });
