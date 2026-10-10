@@ -421,7 +421,7 @@ body {
 
 .order-form {
     display: flex;
-    flexDirection: column; /* ⚠️ Aquí está el detalle: usa camelCase en lugar de kebab-case */
+    flexDirection: column;
     gap: 15px;
 }
 
