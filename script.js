@@ -402,17 +402,14 @@ function deleteProduct(index) {
 
 
 /**
- * Renderiza las tarjetas del catálogo principal de forma segura
+ * Renderiza las tarjetas del catálogo principal usando el índice del array
  */
 function renderProducts() {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
 
     grid.innerHTML = "";
-    products.forEach((product) => {
-        // Escapamos las comillas dobles y simples para evitar errores en el onclick
-        const safeName = product.name.replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        
+    products.forEach((product, index) => {
         grid.innerHTML += `
             <div class="product" data-name="${product.name}">
                 <div class="img-container">
@@ -421,7 +418,7 @@ function renderProducts() {
                 <h3>${product.name}</h3>
                 <p>Componente certificado con garantía.</p>
                 <span class="price">$${product.price.toFixed(2)}</span>
-                <button class="add-to-cart-btn" onclick="addToCart('${safeName}', ${product.price})">Añadir</button>
+                <button class="add-to-cart-btn" onclick="addToCartByIndex(${index})">Añadir</button>
             </div>
         `;
     });
