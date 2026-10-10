@@ -250,3 +250,143 @@ function handleAdminLogin(event) {
         alert("Usuario o contraseña incorrectos.");
     }
 }
+
+// --- 8. LÓGICA DEL PANEL CRUD DE ADMINISTRACIÓN ---
+
+// Array global de productos (puedes sincronizarlo con tu catálogo principal)
+let products = [
+    { name: "Pieza de Mano Dental Alta Velocidad", price: 120.00 },
+    { name: "Micromotor Eléctrico Odontológico", price: 250.00 }
+];
+
+/**
+ * Abre el panel de administración y carga los datos en la tabla
+ */
+function initAdminPanel() {
+    const adminModal = document.getElementById('admin-panel-modal');
+    const adminOverlay = document.getElementById('admin-panel-overlay');
+    
+    if (adminModal && adminOverlay) {
+        adminModal.style.display = 'block';
+        adminOverlay.style.display = 'block';
+        renderAdminTable();
+    }
+}
+
+/**
+ * Cierra el panel de administración
+ */
+function closeAdminPanel() {
+    const adminModal = document.getElementById('admin-panel-modal');
+    const adminOverlay = document.getElementById('admin-panel-overlay');
+    
+    if (adminModal && adminOverlay) {
+        adminModal.style.display = 'none';
+        adminOverlay.style.display = 'none';
+    }
+}
+
+/**
+ * Cierra la sesión del administrador
+ */
+function logoutAdmin() {
+    localStorage.removeItem("riodontec_auth");
+    closeAdminPanel();
+    alert("Sesión de administrador cerrada correctamente.");
+}
+
+/**
+ * Dibuja la tabla de productos dentro del panel de administración
+ */
+function renderAdminTable() {
+    const tbody = document.getElementById('admin-products-table-body');
+    if (!tbody) return;
+
+    if (products.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:15px; color:#888;">No hay repuestos registrados.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = "";
+    products.forEach((product, index) => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${product.name}</td>
+                <td>$${product.price.toFixed(2)}</td>
+                <td>
+                    <button onclick="editProduct(${index})" style="background:#f39c12; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Editar</button>
+                    <button onclick="deleteProduct(${index})" style="background:#e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+/**
+ * Guarda un producto nuevo o actualiza uno existente desde el formulario del CRUD
+ */
+function saveProduct(event) {
+    event.preventDefault();
+    
+    const nameInput = document.getElementById('productNameInput');
+    const priceInput = document.getElementById('productPriceInput');
+    const editIndexInput = document.getElementById('productEditIndex');
+
+    if (!nameInput || !priceInput) return;
+
+    const name = nameInput.value.trim();
+    const price = parseFloat(priceInput.value);
+    const editIndex = editIndexInput ? editIndexInput.value : "";
+
+    if (!name || isNaN(price)) {
+        alert("Por favor, introduce un nombre y un precio válido.");
+        return;
+    }
+
+    if (editIndex === "" || editIndex < 0) {
+        // Añadir nuevo producto
+        products.push({ name: name, price: price });
+    } else {
+        // Actualizar producto existente
+        products[editIndex] = { name: name, price: price };
+        editIndexInput.value = "";
+    }
+
+    // Limpiar formulario y refrescar la tabla
+    document.getElementById('productForm').reset();
+    renderAdminTable();
+
+    // Sincronizar con el catálogo principal si existe la función
+    if (typeof renderProducts === 'function') {
+        renderProducts();
+    }
+
+    alert("¡Producto guardado exitosamente!");
+}
+
+/**
+ * Carga los datos de un producto en el formulario para poder editarlos
+ */
+function editProduct(index) {
+    const product = products[index];
+    if (!product) return;
+
+    document.getElementById('productNameInput').value = product.name;
+    document.getElementById('productPriceInput').value = product.price;
+    document.getElementById('productEditIndex').value = index;
+}
+
+/**
+ * Elimina un producto de la lista
+ */
+function deleteProduct(index) {
+    if (confirm("¿Estás seguro de que deseas eliminar este producto del inventario?")) {
+        products.splice(index, 1);
+        renderAdminTable();
+
+        // Sincronizar con el catálogo principal
+        if (typeof renderProducts === 'function') {
+            renderProducts();
+        }
+    }
+}
