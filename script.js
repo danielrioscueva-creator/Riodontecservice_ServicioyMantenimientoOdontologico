@@ -250,30 +250,37 @@ function handleAdminLogin(event) {
     }
 }
 
-// --- 8. LÓGICA DEL PANEL CRUD DE ADMINISTRACIÓN ---
+// --- 8. LÓGICA DEL PANEL CRUD Y PERSISTENCIA (LOCALSTORAGE) ---
 
-// Array global con los 16 productos reales de tu catálogo web
-let products = [
-    { name: "Rodamiento Cerámico", price: 70.00 },
-    { name: "Filtro de Aire 1/4", price: 25.00 },
-    { name: "Punta Ultrasonido G1", price: 15.00 },
-    { name: "Manguera Borden 4H", price: 35.00 },
-    { name: "Sillones odontológicos", price: 2500.00 },
-    { name: "Jeringa Triple", price: 40.00 },
-    { name: "Presostato Square D", price: 55.00 },
-    { name: "Válvula de Pedal", price: 48.00 },
-    { name: "Kit O-rings (50 pcs)", price: 20.00 },
-    { name: "Acople Rápido 4H", price: 65.00 },
-    { name: "Manómetro de Presión", price: 18.00 },
-    { name: "Válvula de Succión", price: 22.00 },
-    { name: "Aceite en Spray", price: 15.00 },
-    { name: "Micro-motor E-type", price: 110.00 },
-    { name: "Contra-ángulo 1:1", price: 85.00 },
-    { name: "Tarjeta de Control", price: 145.00 }
+// Lista base con los 16 productos reales y sus respectivas imágenes originales
+let defaultProducts = [
+    { name: "Rodamiento Cerámico", price: 70.00, img: "https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" },
+    { name: "Filtro de Aire 1/4", price: 25.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1THolIbc1ETVeDtR4rkjQaBmSkX51Lksjeg&s" },
+    { name: "Punta Ultrasonido G1", price: 15.00, img: "https://i.postimg.cc/Wbctz0HV/Whats-App-Image-2025-12-30-at-20-36-56.jpg" },
+    { name: "Manguera Borden 4H", price: 35.00, img: "https://i.postimg.cc/3NY55rnn/Whats-App-Image-2025-12-30-at-20-46-13.jpg" },
+    { name: "Sillones odontológicos", price: 2500.00, img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg" },
+    { name: "Jeringa Triple", price: 40.00, img: "https://i.postimg.cc/K8KjjQD9/Whats-App-Image-2025-12-30-at-19-07-26.jpg" },
+    { name: "Presostato Square D", price: 55.00, img: "https://i.postimg.cc/Y2bQmnQB/Whats-App-Image-2025-12-30-at-20-32-16.jpg" },
+    { name: "Válvula de Pedal", price: 48.00, img: "https://i.postimg.cc/T3h0w8s9/Whats-App-Image-2025-12-30-at-20-29-02.jpg" },
+    { name: "Kit O-rings (50 pcs)", price: 20.00, img: "https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" },
+    { name: "Acople Rápido 4H", price: 65.00, img: "https://i.postimg.cc/3NY55rnn/Whats-App-Image-2025-12-30-at-20-46-13.jpg" },
+    { name: "Manómetro de Presión", price: 18.00, img: "https://i.postimg.cc/Y2bQmnQB/Whats-App-Image-2025-12-30-at-20-32-16.jpg" },
+    { name: "Válvula de Succión", price: 22.00, img: "https://i.postimg.cc/Wbctz0HV/Whats-App-Image-2025-12-30-at-20-36-56.jpg" },
+    { name: "Aceite en Spray", price: 15.00, img: "https://i.postimg.cc/K8KjjQD9/Whats-App-Image-2025-12-30-at-19-07-26.jpg" },
+    { name: "Micro-motor E-type", price: 110.00, img: "https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" },
+    { name: "Contra-ángulo 1:1", price: 85.00, img: "https://i.postimg.cc/3NY55rnn/Whats-App-Image-2025-12-30-at-20-46-13.jpg" },
+    { name: "Tarjeta de Control", price: 145.00, img: "https://i.postimg.cc/T3h0w8s9/Whats-App-Image-2025-12-30-at-20-29-02.jpg" }
 ];
 
+// Carga los productos guardados en el navegador o usa los predeterminados
+let products = JSON.parse(localStorage.getItem("riodontec_products")) || defaultProducts;
+
+function saveProductsToStorage() {
+    localStorage.setItem("riodontec_products", JSON.stringify(products));
+}
+
 /**
- * Abre el panel de administración y carga los datos en la tabla
+ * Abre el panel de administración
  */
 function initAdminPanel() {
     const adminModal = document.getElementById('admin-panel-modal');
@@ -309,7 +316,7 @@ function logoutAdmin() {
 }
 
 /**
- * Dibuja la tabla de productos dentro del panel de administración
+ * Dibuja la tabla dentro del panel de administración
  */
 function renderAdminTable() {
     const tbody = document.getElementById('admin-products-table-body');
@@ -336,48 +343,55 @@ function renderAdminTable() {
 }
 
 /**
- * Guarda un producto nuevo o actualiza uno existente desde el formulario del CRUD
+ * Guarda un producto nuevo o actualiza uno existente con su imagen personalizada
  */
 function saveProduct(event) {
     event.preventDefault();
     
     const nameInput = document.getElementById('productNameInput');
     const priceInput = document.getElementById('productPriceInput');
+    const imgInput = document.getElementById('productImgInput'); // Nuevo campo de imagen
     const editIndexInput = document.getElementById('productEditIndex');
 
-    if (!nameInput || !priceInput) return;
+    if (!nameInput || !priceInput || !imgInput) return;
 
     const name = nameInput.value.trim();
     const price = parseFloat(priceInput.value);
+    const imgUrl = imgInput.value.trim();
     const editIndex = editIndexInput ? editIndexInput.value : "";
 
-    if (!name || isNaN(price)) {
-        alert("Por favor, introduce un nombre y un precio válido.");
+    if (!name || isNaN(price) || !imgUrl) {
+        alert("Por favor, completa todos los campos, incluyendo la URL de la imagen.");
         return;
     }
 
     if (editIndex === "" || editIndex < 0) {
-        // Añadir nuevo producto
-        products.push({ name: name, price: price });
+        // Añadir nuevo producto con la imagen ingresada
+        products.push({ 
+            name: name, 
+            price: price, 
+            img: imgUrl 
+        });
     } else {
-        // Actualizar producto existente
-        products[editIndex] = { name: name, price: price };
+        // Actualizar producto existente conservando o actualizando su imagen
+        products[editIndex] = { 
+            name: name, 
+            price: price, 
+            img: imgUrl 
+        };
         editIndexInput.value = "";
     }
 
-    // Limpiar formulario y refrescar la tabla
+    saveProductsToStorage();
     document.getElementById('productForm').reset();
     renderAdminTable();
-
-    if (typeof renderProducts === 'function') {
-        renderProducts();
-    }
+    renderProducts();
 
     alert("¡Producto guardado exitosamente!");
 }
 
 /**
- * Carga los datos de un producto en el formulario para poder editarlos
+ * Carga los datos en el formulario para editar (incluyendo la foto)
  */
 function editProduct(index) {
     const product = products[index];
@@ -385,6 +399,7 @@ function editProduct(index) {
 
     document.getElementById('productNameInput').value = product.name;
     document.getElementById('productPriceInput').value = product.price;
+    document.getElementById('productImgInput').value = product.img || ""; // Carga la URL actual en el input
     document.getElementById('productEditIndex').value = index;
 }
 
@@ -394,27 +409,25 @@ function editProduct(index) {
 function deleteProduct(index) {
     if (confirm("¿Estás seguro de que deseas eliminar este producto del inventario?")) {
         products.splice(index, 1);
+        saveProductsToStorage();
         renderAdminTable();
-
-        if (typeof renderProducts === 'function') {
-            renderProducts();
-        }
+        renderProducts();
     }
 }
 
 /**
- * Renderiza o actualiza las tarjetas de productos en el catálogo principal dinámicamente
+ * Renderiza las tarjetas del catálogo principal respetando la imagen de cada repuesto
  */
 function renderProducts() {
     const grid = document.getElementById('productGrid');
-    if (!grid) return; // Si no estás en la sección del catálogo, no hace nada
+    if (!grid) return;
 
     grid.innerHTML = "";
     products.forEach((product) => {
         grid.innerHTML += `
             <div class="product" data-name="${product.name}">
                 <div class="img-container">
-                    <img src="https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" alt="${product.name}" class="product-img">
+                    <img src="${product.img}" alt="${product.name}" class="product-img">
                 </div>
                 <h3>${product.name}</h3>
                 <p>Componente certificado con garantía.</p>
@@ -425,7 +438,7 @@ function renderProducts() {
     });
 }
 
-// Ejecutar al cargar la página para que el catálogo cargue los productos del array
+// Ejecutar al cargar la página para pintar el catálogo correctamente
 document.addEventListener("DOMContentLoaded", () => {
     renderProducts();
 });
