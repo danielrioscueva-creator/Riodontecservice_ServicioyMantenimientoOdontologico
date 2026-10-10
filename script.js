@@ -176,19 +176,16 @@ function filterProducts() {
  * Envía el formulario de pedido personalizado a WhatsApp y limpia los campos
  */
 function sendCustomOrder() {
-    // 1. Obtener el formulario y los valores
     const form = document.getElementById('customOrderForm');
     const nombre = document.getElementById('orderName').value;
     const correo = document.getElementById('orderEmail').value || "No proporcionado";
     const detalles = document.getElementById('orderDetails').value;
 
-    // 2. Validación básica
     if (!nombre || !detalles) {
         alert("Por favor, completa tu nombre y el detalle de tu pedido.");
         return;
     }
 
-    // 3. Construir el mensaje para WhatsApp
     let message = "¡Hola Ventas RIODONTECSERVICE! 📩%0A";
     message += "*NUEVO PEDIDO PERSONALIZADO*%0A%0A";
     message += `👤 *Nombre:* ${nombre}%0A`;
@@ -196,19 +193,13 @@ function sendCustomOrder() {
     message += `📝 *Pedido:* ${detalles}%0A%0A`;
     message += "Espero su pronta respuesta. ¡Gracias!";
 
-    // 4. Abrir WhatsApp
     window.open(`https://wa.me/${NUMERO_VENTAS}?text=${message}`, '_blank');
-
-    // 5. Borrar los datos del formulario automáticamente
     form.reset();
-
-    console.log("Formulario enviado y limpiado con éxito.");
 }
 
 // --- 7. LÓGICA DE LOGIN DE ADMINISTRADOR ---
 
 function openAdminLogin() {
-    // Si ya está autenticado, abrir directo el panel CRUD sin pedir credenciales de nuevo
     if (localStorage.getItem("riodontec_auth") === "true") {
         initAdminPanel();
         return;
@@ -236,14 +227,11 @@ function handleAdminLogin(event) {
     const user = document.getElementById('adminUser').value.trim();
     const pass = document.getElementById('adminPass').value;
 
-    // Credenciales de administrador
     if (user === "admin" && pass === "riodontec2027") {
         alert("¡Bienvenido al panel de administración!");
         localStorage.setItem("riodontec_auth", "true");
         closeAdminLogin();
         document.getElementById('adminLoginForm').reset();
-        
-        // Abrir el panel CRUD de productos
         initAdminPanel();
     } else {
         alert("Usuario o contraseña incorrectos.");
@@ -252,76 +240,28 @@ function handleAdminLogin(event) {
 
 // --- 8. LÓGICA DEL PANEL CRUD Y PERSISTENCIA (LOCALSTORAGE) ---
 
-// --- LISTA OFICIAL POR DEFECTO DE LOS 12 PRODUCTOS ---
+// Lista oficial por defecto de los 12 productos con sus imágenes
 let defaultProducts = [
-    { 
-        name: "Filtro de Aire", 
-        price: 25.00, 
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHWNluDQyAsg8EZoPo1kfjJ9B5ZXpHVPTKfV-IQ-SMmQ&s"[cite: 12]
-    },
-    { 
-        name: "Punta Ultrasonido G1", 
-        price: 15.00, 
-        img: "https://www.dentalcost.es/15859-thickbox_default/punta-ultrasonidos-g1-tipo-ems-1-unidad.jpg"[cite: 12]
-    },
-    { 
-        name: "Manguera Borden 4H precio x metro", 
-        price: 12.00, 
-        img: "https://http2.mlstatic.com/D_NQ_NP_985961-MLA92692470577_092025-O.webp"[cite: 12]
-    },
-    { 
-        name: "Sillones odontológicos", 
-        price: 2500.00, 
-        img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg"[cite: 12]
-    },
-    { 
-        name: "Jeringa Triple", 
-        price: 40.00, 
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWHv4Cv_xlyOROK6mfCmhzj9D6zhvILZlIs10eYOim4DXZMWBslfZRm50&s=10"[cite: 12]
-    },
-    { 
-        name: "Presostato Square D", 
-        price: 55.00, 
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrbSyMSadSoZc_OKwNKv3ySjsXC9UlGFNyr5bIFrbSQ&s=10"[cite: 12]
-    },
-    { 
-        name: "Válvula de Pedal", 
-        price: 48.00, 
-        img: "https://unidadesdentalesperu.com/wp-content/uploads/2023/10/valvula-peda.jpg" 
-    },
-    { 
-        name: "Kit O-rings", 
-        price: 20.00, 
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2wFNBKd_I5DDiirgYhuqn0SJhgLNNdPCFJFudRi3KKedKXmdrRbw1x3zz&s=10" 
-    },
-    { 
-        name: "Acople Rápido 4H", 
-        price: 65.00, 
-        img: "https://mltracores.com/wp-content/uploads/2022/09/hembra-cavitron.jpg" 
-    },
-    { 
-        name: "Manómetro de Presión", 
-        price: 18.00, 
-        img: "https://s.alicdn.com/@sc04/kf/Hd6f5e9fa5c614655bcc48d8e07e1bde2C/Dental-high-and-low-speed-handpiece-pressure-gauge-pressure-gauge-for-measuring-oral-and-dental-chair-motor-repair-and-testing..jpg_300x300.jpg" 
-    },
-    { 
-        name: "Válvula de Succión", 
-        price: 22.00, 
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgL6WZuY8N_eaMB2TOplLFMF1vy45ubuhpjbzNHL3wXdSJcbtMOqUDbhg&s=10" 
-    },
-    { 
-        name: "Aceite en Spray", 
-        price: 15.00, 
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlYQJ3ejRC5hLH2vKuzagILO4fE81KZcrmVTJkDBEk-HCwYIfDbxxhDnqO&s=10" 
-    }
+    { name: "Filtro de Aire", price: 25.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHWNluDQyAsg8EZoPo1kfjJ9B5ZXpHVPTKfV-IQ-SMmQ&s" },[cite: 12]
+    { name: "Punta Ultrasonido G1", price: 15.00, img: "https://www.dentalcost.es/15859-thickbox_default/punta-ultrasonidos-g1-tipo-ems-1-unidad.jpg" },[cite: 12]
+    { name: "Manguera Borden 4H precio x metro", price: 12.00, img: "https://http2.mlstatic.com/D_NQ_NP_985961-MLA92692470577_092025-O.webp" },[cite: 12]
+    { name: "Sillones odontológicos", price: 2500.00, img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg" },[cite: 12]
+    { name: "Jeringa Triple", price: 40.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWHv4Cv_xlyOROK6mfCmhzj9D6zhvILZlIs10eYOim4DXZMWBslfZRm50&s=10" },[cite: 12]
+    { name: "Presostato Square D", price: 55.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrbSyMSadSoZc_OKwNKv3ySjsXC9UlGFNyr5bIFrbSQ&s=10" },[cite: 12]
+    { name: "Válvula de Pedal", price: 48.00, img: "https://unidadesdentalesperu.com/wp-content/uploads/2023/10/valvula-peda.jpg" },
+    { name: "Kit O-rings", price: 20.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2wFNBKd_I5DDiirgYhuqn0SJhgLNNdPCFJFudRi3KKedKXmdrRbw1x3zz&s=10" },
+    { name: "Acople Rápido 4H", price: 65.00, img: "https://mltracores.com/wp-content/uploads/2022/09/hembra-cavitron.jpg" },
+    { name: "Manómetro de Presión", price: 18.00, img: "https://s.alicdn.com/@sc04/kf/Hd6f5e9fa5c614655bcc48d8e07e1bde2C/Dental-high-and-low-speed-handpiece-pressure-gauge-pressure-gauge-for-measuring-oral-and-dental-chair-motor-repair-and-testing..jpg_300x300.jpg" },
+    { name: "Válvula de Succión", price: 22.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgL6WZuY8N_eaMB2TOplLFMF1vy45ubuhpjbzNHL3wXdSJcbtMOqUDbhg&s=10" },
+    { name: "Aceite en Spray", price: 15.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlYQJ3ejRC5hLH2vKuzagILO4fE81KZcrmVTJkDBEk-HCwYIfDbxxhDnqO&s=10" }
 ];
 
-// Carga los productos guardados en el navegador o usa estos 12 por defecto
 let products = JSON.parse(localStorage.getItem("riodontec_products")) || defaultProducts;
 
 function saveProductsToStorage() {
     localStorage.setItem("riodontec_products", JSON.stringify(products));
 }
+
 /**
  * Abre el panel de administración
  */
@@ -393,8 +333,8 @@ function saveProduct(event) {
     
     const nameInput = document.getElementById('productNameInput');
     const priceInput = document.getElementById('productPriceInput');
-    const imgInput = document.getElementById('productImgInput'); // Nuevo campo de imagen
-    const editIndexInput = document.getElementById('productEditIndex');
+    const imgInput = document.getElementById('productImgInput');
+    const editIndexInput = document.getElementById('productIndex') || document.getElementById('productEditIndex');
 
     if (!nameInput || !priceInput || !imgInput) return;
 
@@ -409,20 +349,10 @@ function saveProduct(event) {
     }
 
     if (editIndex === "" || editIndex < 0) {
-        // Añadir nuevo producto con la imagen ingresada
-        products.push({ 
-            name: name, 
-            price: price, 
-            img: imgUrl 
-        });
+        products.push({ name: name, price: price, img: imgUrl });
     } else {
-        // Actualizar producto existente conservando o actualizando su imagen
-        products[editIndex] = { 
-            name: name, 
-            price: price, 
-            img: imgUrl 
-        };
-        editIndexInput.value = "";
+        products[editIndex] = { name: name, price: price, img: imgUrl };
+        if(editIndexInput) editIndexInput.value = "";
     }
 
     saveProductsToStorage();
@@ -442,8 +372,11 @@ function editProduct(index) {
 
     document.getElementById('productNameInput').value = product.name;
     document.getElementById('productPriceInput').value = product.price;
-    document.getElementById('productImgInput').value = product.img || ""; // Carga la URL actual en el input
-    document.getElementById('productEditIndex').value = index;
+    const imgInput = document.getElementById('productImgInput');
+    if(imgInput) imgInput.value = product.img || "";
+    
+    const editIndexInput = document.getElementById('productIndex') || document.getElementById('productEditIndex');
+    if(editIndexInput) editIndexInput.value = index;
 }
 
 /**
