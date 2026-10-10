@@ -252,33 +252,76 @@ function handleAdminLogin(event) {
 
 // --- 8. LÓGICA DEL PANEL CRUD Y PERSISTENCIA (LOCALSTORAGE) ---
 
-// Lista base con los 16 productos reales y sus respectivas imágenes originales
+// --- LISTA OFICIAL POR DEFECTO DE LOS 12 PRODUCTOS ---
 let defaultProducts = [
-    { name: "Rodamiento Cerámico", price: 70.00, img: "https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" },
-    { name: "Filtro de Aire 1/4", price: 25.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1THolIbc1ETVeDtR4rkjQaBmSkX51Lksjeg&s" },
-    { name: "Punta Ultrasonido G1", price: 15.00, img: "https://i.postimg.cc/Wbctz0HV/Whats-App-Image-2025-12-30-at-20-36-56.jpg" },
-    { name: "Manguera Borden 4H", price: 35.00, img: "https://i.postimg.cc/3NY55rnn/Whats-App-Image-2025-12-30-at-20-46-13.jpg" },
-    { name: "Sillones odontológicos", price: 2500.00, img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg" },
-    { name: "Jeringa Triple", price: 40.00, img: "https://i.postimg.cc/K8KjjQD9/Whats-App-Image-2025-12-30-at-19-07-26.jpg" },
-    { name: "Presostato Square D", price: 55.00, img: "https://i.postimg.cc/Y2bQmnQB/Whats-App-Image-2025-12-30-at-20-32-16.jpg" },
-    { name: "Válvula de Pedal", price: 48.00, img: "https://i.postimg.cc/T3h0w8s9/Whats-App-Image-2025-12-30-at-20-29-02.jpg" },
-    { name: "Kit O-rings (50 pcs)", price: 20.00, img: "https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" },
-    { name: "Acople Rápido 4H", price: 65.00, img: "https://i.postimg.cc/3NY55rnn/Whats-App-Image-2025-12-30-at-20-46-13.jpg" },
-    { name: "Manómetro de Presión", price: 18.00, img: "https://i.postimg.cc/Y2bQmnQB/Whats-App-Image-2025-12-30-at-20-32-16.jpg" },
-    { name: "Válvula de Succión", price: 22.00, img: "https://i.postimg.cc/Wbctz0HV/Whats-App-Image-2025-12-30-at-20-36-56.jpg" },
-    { name: "Aceite en Spray", price: 15.00, img: "https://i.postimg.cc/K8KjjQD9/Whats-App-Image-2025-12-30-at-19-07-26.jpg" },
-    { name: "Micro-motor E-type", price: 110.00, img: "https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" },
-    { name: "Contra-ángulo 1:1", price: 85.00, img: "https://i.postimg.cc/3NY55rnn/Whats-App-Image-2025-12-30-at-20-46-13.jpg" },
-    { name: "Tarjeta de Control", price: 145.00, img: "https://i.postimg.cc/T3h0w8s9/Whats-App-Image-2025-12-30-at-20-29-02.jpg" }
+    { 
+        name: "Filtro de Aire", 
+        price: 25.00, 
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHWNluDQyAsg8EZoPo1kfjJ9B5ZXpHVPTKfV-IQ-SMmQ&s"[cite: 12]
+    },
+    { 
+        name: "Punta Ultrasonido G1", 
+        price: 15.00, 
+        img: "https://www.dentalcost.es/15859-thickbox_default/punta-ultrasonidos-g1-tipo-ems-1-unidad.jpg"[cite: 12]
+    },
+    { 
+        name: "Manguera Borden 4H precio x metro", 
+        price: 12.00, 
+        img: "https://http2.mlstatic.com/D_NQ_NP_985961-MLA92692470577_092025-O.webp"[cite: 12]
+    },
+    { 
+        name: "Sillones odontológicos", 
+        price: 2500.00, 
+        img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg"[cite: 12]
+    },
+    { 
+        name: "Jeringa Triple", 
+        price: 40.00, 
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWHv4Cv_xlyOROK6mfCmhzj9D6zhvILZlIs10eYOim4DXZMWBslfZRm50&s=10"[cite: 12]
+    },
+    { 
+        name: "Presostato Square D", 
+        price: 55.00, 
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrbSyMSadSoZc_OKwNKv3ySjsXC9UlGFNyr5bIFrbSQ&s=10"[cite: 12]
+    },
+    { 
+        name: "Válvula de Pedal", 
+        price: 48.00, 
+        img: "https://unidadesdentalesperu.com/wp-content/uploads/2023/10/valvula-peda.jpg" 
+    },
+    { 
+        name: "Kit O-rings", 
+        price: 20.00, 
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2wFNBKd_I5DDiirgYhuqn0SJhgLNNdPCFJFudRi3KKedKXmdrRbw1x3zz&s=10" 
+    },
+    { 
+        name: "Acople Rápido 4H", 
+        price: 65.00, 
+        img: "https://mltracores.com/wp-content/uploads/2022/09/hembra-cavitron.jpg" 
+    },
+    { 
+        name: "Manómetro de Presión", 
+        price: 18.00, 
+        img: "https://s.alicdn.com/@sc04/kf/Hd6f5e9fa5c614655bcc48d8e07e1bde2C/Dental-high-and-low-speed-handpiece-pressure-gauge-pressure-gauge-for-measuring-oral-and-dental-chair-motor-repair-and-testing..jpg_300x300.jpg" 
+    },
+    { 
+        name: "Válvula de Succión", 
+        price: 22.00, 
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgL6WZuY8N_eaMB2TOplLFMF1vy45ubuhpjbzNHL3wXdSJcbtMOqUDbhg&s=10" 
+    },
+    { 
+        name: "Aceite en Spray", 
+        price: 15.00, 
+        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlYQJ3ejRC5hLH2vKuzagILO4fE81KZcrmVTJkDBEk-HCwYIfDbxxhDnqO&s=10" 
+    }
 ];
 
-// Carga los productos guardados en el navegador o usa los predeterminados
+// Carga los productos guardados en el navegador o usa estos 12 por defecto
 let products = JSON.parse(localStorage.getItem("riodontec_products")) || defaultProducts;
 
 function saveProductsToStorage() {
     localStorage.setItem("riodontec_products", JSON.stringify(products));
 }
-
 /**
  * Abre el panel de administración
  */
