@@ -421,7 +421,7 @@ body {
 
 .order-form {
     display: flex;
-    flexDirection: column;
+    flex-direction: column;
     gap: 15px;
 }
 
