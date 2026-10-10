@@ -98,7 +98,7 @@ function updateCartUI() {
 
     if (cart.length === 0) {
         list.innerHTML = '<p class="empty-msg">No hay repuestos seleccionados.</p>';
-        totalSpan.innerText = "$0.00";
+        totalSpan.innerText = "\$0.00";
         return;
     }
 
@@ -141,8 +141,8 @@ function sendOrderWhatsApp() {
     message += "%0A%0A¿Podrían confirmarme disponibilidad y envío?";
 
     window.open(`https://wa.me/${NUMERO_VENTAS}?text=${message}`, '_blank');
-toggleCartDisplay();
-cart = [];
+    toggleCartDisplay();
+    cart = [];
 
     // Ponemos el contador del header en 0
     const countElement = document.getElementById('cart-count');
@@ -160,9 +160,9 @@ function contactExpert() {
 // --- 6. BUSCADOR DE CATÁLOGO ---
 function filterProducts() {
     const input = document.getElementById('productSearch').value.toLowerCase();
-    const products = document.querySelectorAll('.product');
+    const productsList = document.querySelectorAll('.product');
     
-    products.forEach(p => {
+    productsList.forEach(p => {
         const name = p.getAttribute('data-name') ? p.getAttribute('data-name').toLowerCase() : "";
         if (name.includes(input)) {
             p.style.display = "flex"; 
@@ -199,17 +199,16 @@ function sendCustomOrder() {
     // 4. Abrir WhatsApp
     window.open(`https://wa.me/${NUMERO_VENTAS}?text=${message}`, '_blank');
 
-    // 5. LA CORRECCIÓN: Borrar los datos del formulario automáticamente
+    // 5. Borrar los datos del formulario automáticamente
     form.reset();
 
-    // Opcional: Mostrar un mensaje de éxito rápido
     console.log("Formulario enviado y limpiado con éxito.");
 }
 
 // --- 7. LÓGICA DE LOGIN DE ADMINISTRADOR ---
 
 function openAdminLogin() {
-    // Si ya está autenticado, abrir directo el panel
+    // Si ya está autenticado, abrir directo el panel CRUD sin pedir credenciales de nuevo
     if (localStorage.getItem("riodontec_auth") === "true") {
         initAdminPanel();
         return;
@@ -237,7 +236,7 @@ function handleAdminLogin(event) {
     const user = document.getElementById('adminUser').value.trim();
     const pass = document.getElementById('adminPass').value;
 
-    // Credenciales directas de administrador
+    // Credenciales de administrador
     if (user === "admin" && pass === "riodontec2027") {
         alert("¡Bienvenido al panel de administración!");
         localStorage.setItem("riodontec_auth", "true");
@@ -253,10 +252,24 @@ function handleAdminLogin(event) {
 
 // --- 8. LÓGICA DEL PANEL CRUD DE ADMINISTRACIÓN ---
 
-// Array global de productos (puedes sincronizarlo con tu catálogo principal)
+// Array global con los 16 productos reales de tu catálogo web
 let products = [
-    { name: "Pieza de Mano Dental Alta Velocidad", price: 120.00 },
-    { name: "Micromotor Eléctrico Odontológico", price: 250.00 }
+    { name: "Rodamiento Cerámico", price: 70.00 },
+    { name: "Filtro de Aire 1/4", price: 25.00 },
+    { name: "Punta Ultrasonido G1", price: 15.00 },
+    { name: "Manguera Borden 4H", price: 35.00 },
+    { name: "Sillones odontológicos", price: 2500.00 },
+    { name: "Jeringa Triple", price: 40.00 },
+    { name: "Presostato Square D", price: 55.00 },
+    { name: "Válvula de Pedal", price: 48.00 },
+    { name: "Kit O-rings (50 pcs)", price: 20.00 },
+    { name: "Acople Rápido 4H", price: 65.00 },
+    { name: "Manómetro de Presión", price: 18.00 },
+    { name: "Válvula de Succión", price: 22.00 },
+    { name: "Aceite en Spray", price: 15.00 },
+    { name: "Micro-motor E-type", price: 110.00 },
+    { name: "Contra-ángulo 1:1", price: 85.00 },
+    { name: "Tarjeta de Control", price: 145.00 }
 ];
 
 /**
@@ -311,9 +324,9 @@ function renderAdminTable() {
     products.forEach((product, index) => {
         tbody.innerHTML += `
             <tr>
-                <td>${product.name}</td>
-                <td>$${product.price.toFixed(2)}</td>
-                <td>
+                <td style="padding:10px;">${product.name}</td>
+                <td style="padding:10px;">$${product.price.toFixed(2)}</td>
+                <td style="padding:10px;">
                     <button onclick="editProduct(${index})" style="background:#f39c12; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Editar</button>
                     <button onclick="deleteProduct(${index})" style="background:#e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;">Eliminar</button>
                 </td>
@@ -356,7 +369,6 @@ function saveProduct(event) {
     document.getElementById('productForm').reset();
     renderAdminTable();
 
-    // Sincronizar con el catálogo principal si existe la función
     if (typeof renderProducts === 'function') {
         renderProducts();
     }
@@ -384,7 +396,6 @@ function deleteProduct(index) {
         products.splice(index, 1);
         renderAdminTable();
 
-        // Sincronizar con el catálogo principal
         if (typeof renderProducts === 'function') {
             renderProducts();
         }
