@@ -251,10 +251,10 @@ function handleAdminLogin(event) {
 
 // Lista oficial por defecto de los 12 productos con sus imágenes
 let defaultProducts = [
-    { name: "Filtro de Aire", price: 25.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHWNluDQyAsg8EZoPo1kfjJ9B5ZXpHVPTKfV-IQ-SMmQ&s" },[cite: 12]
-    { name: "Punta Ultrasonido G1", price: 15.00, img: "https://www.dentalcost.es/15859-thickbox_default/punta-ultrasonidos-g1-tipo-ems-1-unidad.jpg" },[cite: 12]
-    { name: "Manguera Borden 4H precio x metro", price: 12.00, img: "https://http2.mlstatic.com/D_NQ_NP_985961-MLA92692470577_092025-O.webp" },[cite: 12]
-    { name: "Sillones odontológicos", price: 2500.00, img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg" },[cite: 12]
+    { name: "Filtro de Aire", price: 25.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHWNluDQyAsg8EZoPo1kfjJ9B5ZXpHVPTKfV-IQ-SMmQ&s" },
+    { name: "Punta Ultrasonido G1", price: 15.00, img: "https://www.dentalcost.es/15859-thickbox_default/punta-ultrasonidos-g1-tipo-ems-1-unidad.jpg" },
+    { name: "Manguera Borden 4H precio x metro", price: 12.00, img: "https://http2.mlstatic.com/D_NQ_NP_985961-MLA92692470577_092025-O.webp" },
+    { name: "Sillones odontológicos", price: 2500.00, img: "https://i.postimg.cc/ZRQDbbbX/Whats-App-Image-2025-12-30-at-20-21-50.jpg" },
     { name: "Jeringa Triple", price: 40.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWHv4Cv_xlyOROK6mfCmhzj9D6zhvILZlIs10eYOim4DXZMWBslfZRm50&s=10" },[cite: 12]
     { name: "Presostato Square D", price: 55.00, img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJrbSyMSadSoZc_OKwNKv3ySjsXC9UlGFNyr5bIFrbSQ&s=10" },[cite: 12]
     { name: "Válvula de Pedal", price: 48.00, img: "https://unidadesdentalesperu.com/wp-content/uploads/2023/10/valvula-peda.jpg" },
