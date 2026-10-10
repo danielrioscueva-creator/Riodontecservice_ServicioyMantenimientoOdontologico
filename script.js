@@ -207,37 +207,46 @@ function openAdminLogin() {
     
     const modal = document.getElementById('admin-login-modal');
     const overlay = document.getElementById('admin-login-overlay');
+    
     if (modal && overlay) {
         modal.style.display = 'block';
         overlay.style.display = 'block';
+    } else {
+        console.error("No se encontró el modal o el overlay de login en el HTML.");
     }
 }
 
 function closeAdminLogin() {
     const modal = document.getElementById('admin-login-modal');
     const overlay = document.getElementById('admin-login-overlay');
-    if (modal && overlay) {
-        modal.style.display = 'none';
-        overlay.style.display = 'none';
-    }
+    
+    if (modal) modal.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
 }
 
 function handleAdminLogin(event) {
     event.preventDefault();
-    const user = document.getElementById('adminUser').value.trim();
-    const pass = document.getElementById('adminPass').value;
+    const userInput = document.getElementById('adminUser');
+    const passInput = document.getElementById('adminPass');
+
+    if (!userInput || !passInput) return;
+
+    const user = userInput.value.trim();
+    const pass = passInput.value;
 
     if (user === "admin" && pass === "riodontec2027") {
         alert("¡Bienvenido al panel de administración!");
         localStorage.setItem("riodontec_auth", "true");
         closeAdminLogin();
-        document.getElementById('adminLoginForm').reset();
+        
+        const form = document.getElementById('adminLoginForm');
+        if (form) form.reset();
+        
         initAdminPanel();
     } else {
         alert("Usuario o contraseña incorrectos.");
     }
 }
-
 // --- 8. LÓGICA DEL PANEL CRUD Y PERSISTENCIA (LOCALSTORAGE) ---
 
 // Lista oficial por defecto de los 12 productos con sus imágenes
