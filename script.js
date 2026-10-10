@@ -401,3 +401,31 @@ function deleteProduct(index) {
         }
     }
 }
+
+/**
+ * Renderiza o actualiza las tarjetas de productos en el catálogo principal dinámicamente
+ */
+function renderProducts() {
+    const grid = document.getElementById('productGrid');
+    if (!grid) return; // Si no estás en la sección del catálogo, no hace nada
+
+    grid.innerHTML = "";
+    products.forEach((product) => {
+        grid.innerHTML += `
+            <div class="product" data-name="${product.name}">
+                <div class="img-container">
+                    <img src="https://i.postimg.cc/6pM4Sy5x/Whats-App-Image-2025-12-30-at-19-08-05.jpg" alt="${product.name}" class="product-img">
+                </div>
+                <h3>${product.name}</h3>
+                <p>Componente certificado con garantía.</p>
+                <span class="price">$${product.price.toFixed(2)}</span>
+                <button class="add-to-cart-btn" onclick="addToCart('${product.name}', ${product.price})">Añadir</button>
+            </div>
+        `;
+    });
+}
+
+// Ejecutar al cargar la página para que el catálogo cargue los productos del array
+document.addEventListener("DOMContentLoaded", () => {
+    renderProducts();
+});
